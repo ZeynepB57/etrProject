@@ -8,12 +8,12 @@ const App = () => {
 
   const completeGroups = (data) => {
     const tempData = [...data];
-    
+
     data.forEach((item) => {
       const code = item.account_code;
 
       const parent3 = code.slice(0, 3);
-      if (!tempData.some((d) => d.account_code === parent3)) {
+      if (!tempData.some((d) => d.account_code === parent3) && code.length > 3) {
         tempData.push({
           account_code: parent3,
           account_balance: 0,
@@ -22,7 +22,7 @@ const App = () => {
 
       if (code.length > 3) {
         const parent6 = code.slice(0, 6);
-        if (!tempData.some((d) => d.account_code === parent6)) {
+        if (!tempData.some((d) => d.account_code === parent6) && code.length > 6) {
           tempData.push({
             account_code: parent6,
             account_balance: 0,
@@ -45,18 +45,13 @@ const App = () => {
       }
     };
 
-    // İlk veri çekme
     fetchData();
-
-    // 15 saniyede bir veri çekme
     const interval = setInterval(() => {
       fetchData();
     }, 15000);
 
-    // Component unmount olduğunda interval temizlenir
     return () => clearInterval(interval);
-
-  }, []); // Boş array, sadece bir kez çalışacak
+  }, []);
 
   const groupData = (data, length, filterLength) => {
     const grouped = {};
@@ -74,14 +69,10 @@ const App = () => {
   };
 
   const calculateParentBalances = (childGrouped, parentGrouped, parentLength) => {
-    Object.keys(childGrouped).forEach((childKey) => {
-      const parentKey = childKey.slice(0, parentLength);
-      if (parentGrouped[parentKey]) {
-        // Eğer üst grup toplamı sıfırsa, sadece alt grup toplamı eklenir
-        if (parentGrouped[parentKey].totalBalance === 0) {
-          parentGrouped[parentKey].totalBalance += childGrouped[childKey].totalBalance;
-        }
-      }
+    Object.keys(parentGrouped).forEach((parentKey) => {
+      parentGrouped[parentKey].totalBalance = Object.keys(childGrouped)
+        .filter((childKey) => childKey.startsWith(parentKey))
+        .reduce((sum, childKey) => sum + childGrouped[childKey].totalBalance, 0);
     });
   };
 
