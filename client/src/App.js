@@ -37,7 +37,7 @@ const App = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await axios.get('http://localhost:5000/api/accounts');
+        const result = await axios.get('https://etrproject-backend.onrender.com/api/accounts');
         const completedData = completeGroups(result.data);
         setAccounts(completedData);
       } catch (error) {
