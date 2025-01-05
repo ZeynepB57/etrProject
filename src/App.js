@@ -76,9 +76,14 @@ const App = () => {
     });
   };
 
+  // 11 haneli verileri sıralama
   const groupedBy3 = groupData(accounts, 3, 3);
   const groupedBy6 = groupData(accounts, 6, 6);
-  const groupedBy11 = groupData(accounts, 11, 11);
+  const groupedBy11 = groupData(
+    accounts.sort((a, b) => a.account_code.localeCompare(b.account_code)), // Sıralama eklendi
+    11,
+    11
+  );
 
   calculateParentBalances(groupedBy11, groupedBy6, 6);
   calculateParentBalances(groupedBy6, groupedBy3, 3);
@@ -111,7 +116,7 @@ const App = () => {
                   </button>
                 </td>
                 <td>{key3}</td>
-                <td>{group3.totalBalance.toFixed(2)} ₺</td>
+                <td>{group3.totalBalance.toFixed(2)} </td>
               </tr>
 
               {expandedGroups[key3] &&
@@ -126,7 +131,7 @@ const App = () => {
                             </button>
                           </td>
                           <td>{key6}</td>
-                          <td>{group6.totalBalance.toFixed(2)} ₺</td>
+                          <td>{group6.totalBalance.toFixed(2)} </td>
                         </tr>
 
                         {expandedGroups[key6] &&
@@ -136,7 +141,7 @@ const App = () => {
                                 <tr key={key11}>
                                   <td></td>
                                   <td>{key11}</td>
-                                  <td>{group11.totalBalance.toFixed(2)} ₺</td>
+                                  <td>{group11.totalBalance.toFixed(2)} </td>
                                 </tr>
                               );
                             }
